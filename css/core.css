@@ -1,18 +1,880 @@
-/* Author: derbl4ck */
-html { color: #fff; font-size: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; height: 100%; width: 100%;}
-html, button, input{ font-family: 'Lato', sans-serif; }
-body { margin: 0; font-family: 'Lato', sans-serif; height:100%; overflow:hidden; background: #192742 url(../bg-2022.jpg); background-size: cover;}
-.intro { color: #FFFFFF; display: block; margin: 0 auto; position: absolute; top: 45%; -moz-transform: translateY(-50%); -webkit-transform: translateY(-50%); -o-transform: translateY(-50%); -ms-transform: translateY(-50%); transform: translateY(-50%); width: 100%; text-align: center; max-width: 100%}
-.intro h1 { position: relative; font-size: 70px; line-height: 1.1; letter-spacing: -2px; font-weight: 500; text-transform: uppercase; text-align: center; color: #ffffff; width: 100%; margin: 0px;}
-.intro h1 span { font-weight: 700; color: #48C0F4; letter-spacing: -1px;}
-.intro h3 { font-size: 0.9em; color: #FFBC42;}
-.intro p { font-size: 18px; letter-spacing: 0.4em; margin: 0; text-transform: uppercase;}
-.intro p span { border-color: #FFFFFF; border-right: 0 none; border-style: solid; border-width: 1px 0px 0px; display: inline-block; margin: 6px 10px; width: 100px;}
-.intro i { color: #48C0F4;}
-.rotate { height: 154px;}
-.btn { background-color: rgba(0,0,0,0.2); -moz-border-radius: 7px; -webkit-border-radius: 7px; border-radius: 7px; -khtml-border-radius: 7px; padding: 15px 25px; color: #fff; text-decoration: none; display: inline-block; font-size: 16px; margin-top: 15px; font-weight: 600;}
-.btn:hover { text-decoration: none; background-color: #2196F3;}
-.mr { margin-right: 15px;}
-@media only screen and (min-width : 900px) and (max-width : 1300px) {.intro h1{font-size:70px;}}
-@media only screen and (min-width : 580px) and (max-width : 900px) {.intro h1{font-size:60px;}.intro h3{font-size: 0.8em;}}
-@media only screen and (min-width : 320px) and (max-width : 580px) {.intro h1{font-size:50px;}.intro h3{font-size: 0.7em;}}
+/* Keep it simple :) */
+
+@font-face {
+	font-family: "Manrope";
+	font-style: normal;
+	font-weight: 400 600;
+	font-display: swap;
+	src: url("../assets/fonts/manrope-latin-variable.woff2") format("woff2");
+}
+
+:root {
+	color-scheme: dark;
+	--canvas: #201d1a;
+	--peach: #ffc39e;
+	--text: #e4d5ca;
+	--muted: #c2b2a5;
+	--line: rgb(255 195 158 / 22%);
+	--frame: clamp(0.5rem, 1.1vw, 1rem);
+	--gutter: clamp(1.35rem, 3.65vw, 4.75rem);
+	--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+	font-family: "Manrope", "Helvetica Neue", Arial, sans-serif;
+	font-synthesis: none;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	padding: var(--frame);
+	background: var(--canvas);
+	color: var(--text);
+	-webkit-font-smoothing: antialiased;
+}
+
+p,
+h1,
+h2 {
+	margin: 0;
+}
+
+button {
+	font: inherit;
+}
+
+::selection {
+	background: var(--peach);
+	color: var(--canvas);
+}
+
+.page {
+	position: relative;
+	isolation: isolate;
+	display: flex;
+	flex-direction: column;
+	min-height: calc(100vh - var(--frame) * 2);
+	min-height: calc(100svh - var(--frame) * 2);
+	padding: clamp(1.4rem, 2.4vw, 2.6rem) var(--gutter) clamp(1.25rem, 2vw, 2rem);
+	overflow: hidden;
+	border: 1px solid var(--line);
+	border-radius: 0.65rem;
+	background: #27221e;
+	container-type: inline-size;
+}
+
+/* The atmosphere is decorative; text and links never depend on it loading. */
+.scene,
+.scene::after,
+.scene__view,
+.scene__image,
+.scene__light {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+}
+
+.scene {
+	z-index: -1;
+	overflow: hidden;
+}
+
+.scene__view {
+	display: none;
+	background-position: center;
+	background-size: cover;
+}
+
+.scene__view--new-york {
+	display: block;
+	background-image: url("../assets/photos/new-york-thumb.webp");
+}
+
+.scene__view--norway {
+	background-image: url("../assets/photos/norway-thumb.webp");
+}
+
+.scene__view--madeira-clouds {
+	background-image: url("../assets/photos/madeira-clouds-thumb.webp");
+}
+
+.scene__view--madeira-leaves {
+	background-image: url("../assets/photos/madeira-leaves-thumb.webp");
+}
+
+.scene__view--paris-one {
+	background-image: url("../assets/photos/paris-one-thumb.webp");
+}
+
+.scene__view--paris-two {
+	background-image: url("../assets/photos/paris-two-thumb.webp");
+}
+
+.scene__view--norway-mountains {
+	background-image: url("../assets/photos/norway-mountains-thumb.webp");
+}
+
+.scene__view--austria {
+	background-image: url("../assets/photos/austria-thumb.webp");
+}
+
+.scene__image {
+	object-fit: cover;
+	object-position: center 48%;
+	filter: saturate(0.78) brightness(0.94);
+}
+
+.scene__view--norway .scene__image {
+	object-position: center 65%;
+}
+
+.scene__view--madeira-clouds .scene__image {
+	object-position: 52% 54%;
+}
+
+.scene__view--paris-two .scene__image {
+	object-position: center 66%;
+}
+
+.scene__view--norway-mountains .scene__image {
+	object-position: center 55%;
+}
+
+.scene__view--austria .scene__image {
+	object-position: center 38%;
+}
+
+.scene__light {
+	background: radial-gradient(ellipse at 74% 35%, rgb(255 189 133 / 10%), transparent 52%);
+	mix-blend-mode: screen;
+}
+
+.scene::after {
+	content: "";
+	background:
+		linear-gradient(180deg, rgb(20 19 17 / 82%), rgb(20 19 17 / 10%) 24%, transparent 38%, rgb(21 18 16 / 60%) 62%, rgb(21 18 16 / 92%) 100%),
+		linear-gradient(90deg, rgb(23 22 20 / 87%), rgb(23 22 20 / 74%) 30%, rgb(23 22 20 / 48%) 48%, rgb(23 22 20 / 8%) 78%);
+}
+
+.masthead {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.5rem;
+}
+
+.wordmark {
+	display: flex;
+	align-items: center;
+	gap: 0.65rem;
+	color: var(--peach);
+	font-size: 1.05rem;
+	font-weight: 600;
+	letter-spacing: -0.045em;
+}
+
+.wordmark__symbol {
+	width: 1.55rem;
+	height: 1.55rem;
+}
+
+.masthead__note {
+	margin-left: -1.2rem;
+	color: var(--muted);
+	font-size: 0.75rem;
+	letter-spacing: 0.02em;
+}
+
+.contact {
+	display: inline-flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.2rem;
+	min-height: 2.875rem;
+	padding: 0.3rem 0.3rem 0.3rem 1.05rem;
+	border: 1px solid rgb(255 195 158 / 32%);
+	border-radius: 3rem;
+	background: rgb(31 26 23 / 64%);
+	color: var(--peach);
+	font-size: 0.8125rem;
+	font-weight: 500;
+	text-decoration: none;
+	transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.contact__arrow {
+	display: grid;
+	width: 2.125rem;
+	height: 2.125rem;
+	place-items: center;
+	border-radius: 50%;
+	background: var(--peach);
+	color: var(--canvas);
+}
+
+.contact__arrow svg {
+	width: 1.05rem;
+	height: 1.05rem;
+	transition: transform 240ms var(--ease-out);
+}
+
+.contact:focus-visible {
+	outline: 2px solid var(--peach);
+	outline-offset: 5px;
+	background: #35271f;
+}
+
+@media (hover: hover) {
+	.contact:hover {
+		border-color: var(--peach);
+		background: var(--peach);
+		color: var(--canvas);
+	}
+
+	.contact:hover .contact__arrow svg {
+		transform: translate(2px, -2px);
+	}
+}
+
+.introduction {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: clamp(2rem, 4.7vh, 4rem);
+	padding-top: clamp(3rem, 8vh, 6.5rem);
+	padding-bottom: 1.5rem;
+}
+
+.introduction__body {
+	display: flex;
+	flex: 1;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 2rem;
+}
+
+.introduction__copy {
+	flex-shrink: 0;
+	max-width: 25rem;
+}
+
+.eyebrow {
+	display: flex;
+	align-items: center;
+	gap: 0.65rem;
+	margin-bottom: 1.2rem;
+	color: var(--muted);
+	font-size: 0.6875rem;
+	font-weight: 500;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.eyebrow span {
+	width: 1.25rem;
+	height: 1px;
+	background: currentColor;
+}
+
+.statement {
+	color: var(--peach);
+	font-size: clamp(2.1rem, 3.35vw, 3.65rem);
+	font-weight: 500;
+	line-height: 1.11;
+	letter-spacing: -0.05em;
+}
+
+.description {
+	max-width: 22rem;
+	margin-top: 1.25rem;
+	color: var(--text);
+	font-size: 0.875rem;
+	font-weight: 400;
+	line-height: 1.8;
+}
+
+/* A native popover and radio group keep eight photographs out of the way. */
+.perspectives {
+	align-self: flex-end;
+	min-width: 0;
+	margin: 0 0 0.35rem;
+}
+
+.perspectives__toggle {
+	display: none;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.4rem;
+	min-height: 4.25rem;
+	padding: 0.85rem 1.05rem;
+	border: 1px solid rgb(255 195 158 / 30%);
+	border-radius: 0.5rem;
+	background: rgb(31 26 23 / 86%);
+	color: var(--peach);
+	text-align: left;
+	cursor: pointer;
+	transition: background-color 180ms ease, border-color 180ms ease;
+}
+
+.perspectives__eyebrow {
+	display: block;
+	margin-bottom: 0.35rem;
+	color: var(--muted);
+	font-size: 0.625rem;
+	font-weight: 500;
+	line-height: 1.5;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.perspectives__icon {
+	flex-shrink: 0;
+	width: 1.2rem;
+	height: 1.2rem;
+}
+
+.perspectives__caption {
+	display: none;
+	color: var(--peach);
+	font-size: 0.875rem;
+	font-weight: 500;
+	line-height: 1.5;
+}
+
+.perspectives__caption--new-york {
+	display: block;
+}
+
+.perspectives__caption span {
+	margin-left: 0.65rem;
+	color: var(--text);
+	font-size: 0.6875rem;
+	font-weight: 400;
+}
+
+.perspectives__fallback {
+	color: var(--text);
+	font-size: 0.75rem;
+}
+
+.photo-picker {
+	position: fixed;
+	inset: auto max(1rem, calc(var(--frame) + var(--gutter))) clamp(8rem, 25vh, 22rem) auto;
+	display: none;
+	width: 27rem;
+	max-width: calc(100vw - 2rem);
+	max-height: calc(100svh - 3rem);
+	margin: 0;
+	padding: 1.25rem;
+	overflow-y: auto;
+	border: 1px solid rgb(255 195 158 / 38%);
+	border-radius: 0.75rem;
+	background: #25211e;
+	color: var(--text);
+	box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 35%);
+}
+
+.photo-picker::backdrop {
+	background: rgb(12 11 10 / 15%);
+}
+
+.photo-picker__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.photo-picker__header h2 {
+	color: var(--peach);
+	font-size: 1.15rem;
+	font-weight: 500;
+	letter-spacing: -0.025em;
+}
+
+.photo-picker__close {
+	display: grid;
+	flex-shrink: 0;
+	width: 2.75rem;
+	height: 2.75rem;
+	place-items: center;
+	border: 1px solid var(--line);
+	border-radius: 50%;
+	background: transparent;
+	color: var(--peach);
+	cursor: pointer;
+}
+
+.photo-picker__close svg {
+	width: 1.1rem;
+	height: 1.1rem;
+}
+
+.photo-picker__intro {
+	margin-top: 0.45rem;
+	color: var(--muted);
+	font-size: 0.75rem;
+	line-height: 1.6;
+}
+
+.photo-picker__choices {
+	min-width: 0;
+	margin: 1.25rem 0 0;
+	padding: 0;
+	border: 0;
+}
+
+.perspectives__options {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 1rem 0.7rem;
+}
+
+.perspective-option {
+	position: relative;
+	display: block;
+	min-width: 0;
+	min-height: 2.75rem;
+	cursor: pointer;
+}
+
+.perspective-option input {
+	position: absolute;
+	z-index: 1;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.perspective-option__image {
+	display: block;
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	padding: 2px;
+	border: 1px solid rgb(255 195 158 / 40%);
+	border-radius: 0.3rem;
+	transition: border-color 160ms ease;
+}
+
+.perspective-option__image img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	border-radius: 0.125rem;
+	object-fit: cover;
+	filter: saturate(0.55) brightness(0.72);
+	transition: filter 160ms ease;
+}
+
+.perspective-option__place {
+	display: block;
+	margin-top: 0.45rem;
+	color: var(--text);
+	font-size: 0.6875rem;
+	line-height: 1.5;
+}
+
+.perspective-option__place small {
+	display: block;
+	color: var(--muted);
+	font-size: 0.5625rem;
+}
+
+.perspective-option input:checked + .perspective-option__image {
+	border-color: var(--peach);
+	box-shadow: 0 0 0 1px var(--peach);
+}
+
+.perspective-option input:checked + .perspective-option__image img,
+.perspective-option:hover .perspective-option__image img {
+	filter: none;
+}
+
+.perspective-option input:focus-visible + .perspective-option__image {
+	outline: 2px solid var(--peach);
+	outline-offset: 4px;
+}
+
+.perspectives__toggle:focus-visible,
+.photo-picker__close:focus-visible {
+	outline: 2px solid var(--peach);
+	outline-offset: 4px;
+}
+
+@media (hover: hover) {
+	.perspectives__toggle:hover,
+	.photo-picker__close:hover {
+		border-color: var(--peach);
+		background: #392c23;
+	}
+}
+
+.perspectives__credit {
+	margin-top: 1.2rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--line);
+	color: var(--muted);
+	font-size: 0.625rem;
+	line-height: 1.6;
+}
+
+/* Older browsers retain the opening photograph and omit inactive controls. */
+@supports selector(:has(*)) and selector(:popover-open) {
+	.perspectives__toggle {
+		display: flex;
+	}
+
+	.perspectives__fallback {
+		display: none;
+	}
+
+	.photo-picker:popover-open {
+		display: block;
+	}
+
+	.page:has(.perspective-option input:checked) .scene__view,
+	.page:has(.perspective-option input:checked) .perspectives__caption {
+		display: none;
+	}
+
+	.page:has(#photo-new-york:checked) .scene__view--new-york,
+	.page:has(#photo-norway:checked) .scene__view--norway,
+	.page:has(#photo-madeira-clouds:checked) .scene__view--madeira-clouds,
+	.page:has(#photo-madeira-leaves:checked) .scene__view--madeira-leaves,
+	.page:has(#photo-paris-one:checked) .scene__view--paris-one,
+	.page:has(#photo-paris-two:checked) .scene__view--paris-two,
+	.page:has(#photo-norway-mountains:checked) .scene__view--norway-mountains,
+	.page:has(#photo-austria:checked) .scene__view--austria,
+	.page:has(#photo-new-york:checked) .perspectives__caption--new-york,
+	.page:has(#photo-norway:checked) .perspectives__caption--norway,
+	.page:has(#photo-madeira-clouds:checked) .perspectives__caption--madeira-clouds,
+	.page:has(#photo-madeira-leaves:checked) .perspectives__caption--madeira-leaves,
+	.page:has(#photo-paris-one:checked) .perspectives__caption--paris-one,
+	.page:has(#photo-paris-two:checked) .perspectives__caption--paris-two,
+	.page:has(#photo-norway-mountains:checked) .perspectives__caption--norway-mountains,
+	.page:has(#photo-austria:checked) .perspectives__caption--austria {
+		display: block;
+	}
+}
+
+.name {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.12em;
+	color: var(--peach);
+	font-size: 14.2vw;
+	font-size: 16.4cqw;
+	font-weight: 500;
+	line-height: 1.08;
+	letter-spacing: -0.055em;
+}
+
+.colophon {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem 2rem;
+	padding-top: 1.15rem;
+	border-top: 1px solid var(--line);
+	color: var(--muted);
+	font-size: 0.6875rem;
+	line-height: 1.6;
+	letter-spacing: 0.015em;
+}
+
+.colophon > p > span:not(.colophon__divider) {
+	color: var(--text);
+}
+
+.colophon__signature {
+	display: flex;
+	align-items: center;
+	gap: 1.1rem;
+}
+
+.colophon__divider {
+	color: var(--muted);
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Short, finite entrances. No loader, looping motion, or JavaScript gate. */
+@media (prefers-reduced-motion: no-preference) {
+	.masthead {
+		animation: arrive 850ms var(--ease-out) both;
+	}
+
+	.introduction__copy {
+		animation: arrive 1100ms 80ms var(--ease-out) both;
+	}
+
+	.perspectives {
+		animation: arrive 1100ms 200ms var(--ease-out) both;
+	}
+
+	.name {
+		animation: arrive 1400ms 140ms var(--ease-out) both;
+	}
+
+	.colophon {
+		animation: arrive 1000ms 260ms var(--ease-out) both;
+	}
+
+	.scene__view--new-york .scene__image {
+		animation: settle 3800ms var(--ease-out) both;
+	}
+
+	.scene__view {
+		animation: scene-arrive 700ms ease-out both;
+	}
+
+	.scene__light {
+		animation: light-fall 3800ms ease-out both;
+	}
+}
+
+@keyframes arrive {
+	from {
+		opacity: 0;
+		transform: translateY(0.75rem);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes settle {
+	from { transform: scale(1.035); }
+	to { transform: scale(1); }
+}
+
+@keyframes light-fall {
+	from { opacity: 0.25; }
+	to { opacity: 1; }
+}
+
+@keyframes scene-arrive {
+	from { opacity: 0.45; }
+	to { opacity: 1; }
+}
+
+@media (max-width: 700px) {
+	.masthead__note {
+		display: none;
+	}
+
+	.page {
+		border-radius: 0.45rem;
+	}
+
+	.scene::after {
+		background:
+			linear-gradient(180deg, rgb(20 19 17 / 62%), rgb(20 19 17 / 45%) 20%, rgb(20 19 17 / 42%) 42%, rgb(21 18 16 / 72%) 65%, rgb(21 18 16 / 93%) 100%),
+			linear-gradient(90deg, rgb(23 22 20 / 69%), rgb(23 22 20 / 47%));
+	}
+
+	.introduction {
+		gap: 1.6rem;
+		padding-top: clamp(2.5rem, 7vh, 4rem);
+		padding-bottom: 1.35rem;
+	}
+
+	.introduction__body {
+		flex-direction: column;
+		gap: 2rem;
+	}
+
+	.introduction__copy {
+		max-width: 100%;
+	}
+
+	.description {
+		max-width: 19rem;
+		font-size: 0.8125rem;
+	}
+
+	.perspectives {
+		width: 100%;
+		margin-bottom: 0;
+	}
+
+	.perspectives__toggle {
+		width: 100%;
+	}
+
+	.perspectives__caption {
+		font-size: 0.75rem;
+	}
+
+	.photo-picker {
+		inset: 50% auto auto 50%;
+		width: calc(100vw - 2rem);
+		transform: translate(-50%, -50%);
+	}
+
+	.colophon {
+		align-items: flex-start;
+		font-size: 0.625rem;
+	}
+
+	.colophon > p:first-child > span {
+		display: block;
+	}
+
+	.colophon__signature {
+		align-items: flex-end;
+		flex-direction: column;
+		gap: 0;
+	}
+
+	.colophon__divider {
+		display: none;
+	}
+}
+
+@media (max-width: 550px) {
+	.name {
+		display: block;
+		font-size: 24vw;
+		font-size: 28.4cqw;
+		line-height: 1.02;
+	}
+
+	.name span {
+		display: block;
+	}
+}
+
+/* Allow natural scrolling on short screens and at large text/zoom settings. */
+@media (max-height: 700px) {
+	.introduction {
+		gap: 1.25rem;
+		padding-top: 2rem;
+	}
+
+	.introduction__body {
+		gap: 1rem;
+	}
+
+	.eyebrow {
+		margin-bottom: 0.85rem;
+	}
+
+	.photo-picker {
+		inset: 50% auto auto 50%;
+		transform: translate(-50%, -50%);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation: none !important;
+		transition: none !important;
+	}
+}
+
+@media (prefers-contrast: more) {
+	:root {
+		--text: #fff;
+		--muted: #fff;
+		--line: #ffc39e;
+	}
+
+	.scene {
+		opacity: 0.2;
+	}
+}
+
+@media (forced-colors: active) {
+	.scene {
+		display: none;
+	}
+
+	.contact,
+	.contact__arrow,
+	.perspectives__toggle,
+	.photo-picker,
+	.photo-picker__close {
+		border: 1px solid ButtonText;
+	}
+
+	.perspective-option input:checked + .perspective-option__image,
+	.perspective-option input:focus-visible + .perspective-option__image {
+		outline: 2px solid Highlight;
+		outline-offset: 3px;
+	}
+}
+
+@media print {
+	:root {
+		color-scheme: light;
+		--canvas: #fff;
+		--peach: #000;
+		--text: #222;
+		--muted: #444;
+		--line: #aaa;
+	}
+
+	.scene,
+	.masthead__note,
+	.perspectives,
+	.photo-picker,
+	.photo-picker:popover-open,
+	.contact__arrow {
+		display: none;
+	}
+
+	.page {
+		min-height: 0;
+		padding: 1rem;
+		border: 0;
+		background: #fff;
+	}
+
+	.page * {
+		animation: none !important;
+	}
+
+	.name {
+		display: block;
+		font-size: 48pt;
+	}
+
+	.name span {
+		display: inline;
+	}
+
+	.contact {
+		min-height: 0;
+		padding: 0;
+		border: 0;
+		background: none;
+	}
+
+	.contact::after {
+		content: " (linkedin.com/in/lukas-wiegert)";
+		font-size: 8pt;
+	}
+}
